@@ -40,7 +40,7 @@ class ClientController {
 
 
 
-            const servico = await conexao.query(`
+            const cliente = await conexao.query(`
             INSERT INTO clients
              (name,email,cpf,contact)
              values
