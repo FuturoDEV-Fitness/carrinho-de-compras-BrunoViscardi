@@ -77,7 +77,7 @@ class ProductsController {
     async listarTodos(request, response) {
 
         const dados = request.query
-        
+
 
         if (dados.name) {
             // verifica se os dados devem ser filtrados pelo nome
@@ -87,6 +87,39 @@ class ProductsController {
         } else {
             const produtos = await conexao.query(`SELECT * FROM products`)
             response.json(produtos.rows)
+        }
+    }
+
+    async listarUm(request, response) {
+        try {
+            const id = request.params.id
+
+            const produto = await conexao.query(`
+                SELECT  p. id,
+                        p.name, 
+                        p.amount, 
+                        p.color, 
+                        p.voltage, 
+                        p.description, 
+                        c.name AS category
+                FROM products AS p
+                LEFT JOIN category AS c
+                ON p.category_id = c.id
+                WHERE p.id = $1;
+            `, [id])
+
+            if (produto.rows.length === 0) {
+                return response.status(404).json({
+                    mensagem: 'Não foi encontrado um produto com esse id'
+                })
+            }
+
+            response.json(produto.rows[0])
+
+        } catch (error) {
+            response.status(500).json({
+                mensagem: 'Houve um erro ao listar o produto'
+            })
         }
     }
 
