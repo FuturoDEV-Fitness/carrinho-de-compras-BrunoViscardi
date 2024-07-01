@@ -73,6 +73,25 @@ class ProductsController {
     }
 
 
+
+    async listarTodos(request, response) {
+
+        const dados = request.query
+        
+
+        if (dados.name) {
+            // verifica se os dados devem ser filtrados pelo nome
+            const produtos = await conexao.query(`SELECT * FROM products
+                    WHERE name ilike $1`, [`%${dados.name}%`])
+            response.json(produtos.rows)
+        } else {
+            const produtos = await conexao.query(`SELECT * FROM products`)
+            response.json(produtos.rows)
+        }
+    }
+
+
+
 }
 
 module.exports = new ProductsController()

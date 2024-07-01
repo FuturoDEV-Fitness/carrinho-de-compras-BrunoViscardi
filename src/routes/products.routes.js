@@ -5,6 +5,7 @@ const ProductsController = require('../controllers/ProductsController')
 const productsRoutes = new Router()
 
 productsRoutes.post('/', ProductsController.criar)
+productsRoutes.get('/', ProductsController.listarTodos)
 
 
 module.exports = productsRoutes
